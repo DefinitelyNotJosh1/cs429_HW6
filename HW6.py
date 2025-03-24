@@ -42,38 +42,47 @@ class NaiveBayesClassifier:
 # Load the data
 data = np.loadtxt('SpamInstances.txt', delimiter=' ', skiprows=1)
 
+print(data.shape)
+
 # Split the data into training and testing sets
-np.random.shuffle(data)
 start = int(0.1*data.shape[0])
 end = int(0.9*data.shape[0])
-print(int(data.shape[0] * 0.2))
+middle = int(0.5*data.shape[0])
 
-train_data = data[start:end]
+train_data_ham = data[start:end]
+train_data_spam = data[middle:end]
+
 valid_data_ham = data[:start]
 valid_data_spam = data[end:]
 
+# get the feature vectors
+vector_data = np.zeros((data.shape[0] - 1, 334))
 
-# get labels
-train_labels = train_data[:, 1]
+print(vector_data.shape)
 
+# function to process each line
+def process_line(line):
+    # split the line into parts
+    parts = line.split()
+    # print(parts)
+    instance = int(parts[0])
+    label = int(parts[1])
+    binary_str = parts[2]
+    
+    # convert binary string to numpy array of digits
+    binary_array = np.array([int(d) for d in binary_str])
+    
+    return instance, label, binary_array
 
-# get vector instance numbers
-train_instance = train_data[:, 0]
-valid_ham_instance = valid_data_ham[:, 0]
-valid_spam_instance = valid_data_spam[:, 0]
+with open('SpamInstances.txt',) as f:
+    for i, line in enumerate(f):
+        if i == 0:
+            continue
+        instance, label, binary_array = process_line(line)
+        vector_data[i-1] = binary_array
+        
 
-# get the vector instances
-train_vector_data = train_data[:, 2]
-valid_vector_data_ham = valid_data_ham[:, 2]
-valid_vector_data_spam = valid_data_spam[:, 2]
-
-# get the vector data
-# train_vector_data = 
-
-print (vector_data)
-
-
-
+print(vector_data.shape)
 
 
 
